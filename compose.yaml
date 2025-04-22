@@ -16,6 +16,7 @@ services:
     build:
       context: .
       dockerfile: ./app/Dockerfile
+      target: dev
     ports:
       - 1323:1323
     volumes:
