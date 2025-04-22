@@ -16,10 +16,10 @@ services:
     build:
       context: .
       dockerfile: ./app/Dockerfile
-    volumes:
-      - ./app:/root/app
     ports:
       - 1323:1323
+    volumes:
+      - ./app:/app
     init: true
     tty: true
     environment:
