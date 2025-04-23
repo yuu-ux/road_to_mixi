@@ -38,6 +38,8 @@ services:
     volumes:
       - db:/var/lib/mysql
       - ./app/db/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - mixi_network
 
 networks:
   mixi_network:
