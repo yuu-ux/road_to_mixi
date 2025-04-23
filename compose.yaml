@@ -37,7 +37,7 @@ services:
       TZ: Asia/Tokyo
     volumes:
       - db:/var/lib/mysql
-      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./app/db/my.cnf:/etc/mysql/conf.d/my.cnf
 
 networks:
   mixi_network:
