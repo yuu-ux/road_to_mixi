@@ -27,6 +27,20 @@ services:
       TZ: Asia/Tokyo
     networks:
       - mixi_network
+  db:
+    image: mysql:8.3.0
+    ports:
+      - 23306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASES: mixi
+      TZ: Asia/Tokyo
+    volumes:
+      - db:/var/lib/mysql
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
 
 networks:
   mixi_network:
+
+volumes:
+  db:
