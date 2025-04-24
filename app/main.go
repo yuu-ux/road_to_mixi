@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
     "github.com/joho/godotenv"
     "log"
+    "road_to_mixi/handlers"
 )
 
 func main() {
@@ -19,8 +20,9 @@ func main() {
     }
 	defer db.Close()
 	e := echo.New()
+    handlers.SetDefault(e)
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
+        return c.Render(http.StatusOK, "index.html", map[string]interface{}{"Title": "トップページ",})
 	})
 	e.Logger.Fatal(e.Start(":1323"))
 }
