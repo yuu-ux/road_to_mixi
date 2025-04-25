@@ -23,7 +23,7 @@ func main() {
     handlers.SetDefault(e)
     database.InitDatabase(db)
 
-    var results []struct {
+    type friend struct {
         ID   int    `json:"id"`
         Name string `json:"name"`
     }
@@ -35,33 +35,43 @@ func main() {
 	})
 
     e.GET("/get_friend_list", func(c echo.Context) error {
+        var friends []friend
         param := c.QueryParam("id")
         if err := db.Model(&models.FriendLink{}).
             Select("User2.user_id AS id, User2.name").
             Joins("User2").
             Where("friend_links.user1_id = ?", param).
-            Scan(&results).Error; err != nil {
+            Scan(&friends).Error; err != nil {
             return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
         }
-        if len(results) == 0 {
-            return c.JSON(http.StatusNotFound, map[string]string{"error": "not found"})
-        }
-        return c.JSON(http.StatusOK, results)
+        return c.JSON(http.StatusOK, friends)
     })
 
     e.GET("get_friend_of_friend_list", func(c echo.Context) error {
+        var friends []friend
         param := c.QueryParam("id")
         subQuery := db.Model(&models.FriendLink{}).
             Select("user2_id").
             Where("user1_id = ?", param)
+        var blockees []int
+        var blockers []int
+        db.Model(&models.BlockList{}).
+            Where("user1_id = ?", param).
+            Pluck("user2_id", &blockees)
+        db.Model(&models.BlockList{}).
+            Where("user2_id = ?", param).
+            Pluck("user1_id", &blockers)
+        blockedIDs := append(blockees, blockers...)
         if err := db.Model(&models.FriendLink{}).
             Select("User2.user_id AS id, User2.name AS name").
             Joins("User2").
             Where("friend_links.user1_id IN (?)", subQuery).
-            Scan(&results).Error; err != nil {
+            Where("friend_links.user2_id NOT IN (?)", subQuery).
+            Where("friend_links.user2_id NOT IN (?)", blockedIDs).
+            Scan(&friends).Error; err != nil {
             return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
             }
-        return c.JSON(http.StatusOK, results)
+        return c.JSON(http.StatusOK, friends)
     })
 
 	e.Logger.Fatal(e.Start(":1323"))
