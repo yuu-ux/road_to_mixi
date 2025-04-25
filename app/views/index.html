@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <p>Hello World</p>
+    <h1>{{ .Title }}</h1>
+
+    <ul>
+        {{ range .Users }}
+        <li>
+            ID: {{ .ID }} / 名前： {{ .Name }}
+        </li>
+        {{ else }}
+        <li>ユーザーがいません。</li>
+        {{ end }}
+    </ul>
 </body>
 </html>
