@@ -1,17 +1,4 @@
 services:
-  web:
-    build:
-      context: .
-      dockerfile: ./web/Dockerfile
-    ports:
-      - 8090:8090
-    depends_on:
-      - app
-    init: true
-    environment:
-      TZ: Asia/Tokyo
-    networks:
-      - mixi_network
   app:
     build:
       context: .
