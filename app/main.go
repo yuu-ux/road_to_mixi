@@ -1,14 +1,15 @@
 package main
 
 import (
-    database "road_to_mixi/db"
-    "strconv"
+	"log"
 	"net/http"
+	database "road_to_mixi/db"
+	"road_to_mixi/handlers"
+	"road_to_mixi/models"
+	"road_to_mixi/repository"
+	"strconv"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
-    "github.com/joho/godotenv"
-    "log"
-    "road_to_mixi/handlers"
-    "road_to_mixi/models"
 )
 
 func main() {
@@ -24,11 +25,6 @@ func main() {
     handlers.SetDefault(e)
     database.InitDatabase(db)
 
-    type friend struct {
-        ID   int    `json:"id"`
-        Name string `json:"name"`
-    }
-
 	e.GET("/", func(c echo.Context) error {
         var users []models.User
         db.Find(&users)
@@ -36,42 +32,20 @@ func main() {
 	})
 
     e.GET("/get_friend_list", func(c echo.Context) error {
-        var friends []friend
         id := c.QueryParam("id")
-        if err := db.Model(&models.FriendLink{}).
-            Select("User2.user_id AS id, User2.name").
-            Joins("User2").
-            Where("friend_links.user1_id = ?", id).
-            Scan(&friends).Error; err != nil {
+        friends, err := repository.Get_friend_list(db, id)
+        if err != nil {
             return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
         }
         return c.JSON(http.StatusOK, friends)
     })
 
     e.GET("get_friend_of_friend_list", func(c echo.Context) error {
-        var friends []friend
         id := c.QueryParam("id")
-        subQuery := db.Model(&models.FriendLink{}).
-            Select("user2_id").
-            Where("user1_id = ?", id)
-        var blockees []int
-        var blockers []int
-        db.Model(&models.BlockList{}).
-            Where("user1_id = ?", id).
-            Pluck("user2_id", &blockees)
-        db.Model(&models.BlockList{}).
-            Where("user2_id = ?", id).
-            Pluck("user1_id", &blockers)
-        blockedIDs := append(blockees, blockers...)
-        if err := db.Model(&models.FriendLink{}).
-            Select("User2.user_id AS id, User2.name AS name").
-            Joins("User2").
-            Where("friend_links.user1_id IN (?)", subQuery).
-            Where("friend_links.user2_id NOT IN (?)", subQuery).
-            Where("friend_links.user2_id NOT IN (?)", blockedIDs).
-            Scan(&friends).Error; err != nil {
+        friends, err := repository.Get_friend_of_friend_list(db, id)
+        if err != nil {
             return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
-            }
+        }
         return c.JSON(http.StatusOK, friends)
     })
 
@@ -87,31 +61,10 @@ func main() {
         if err != nil {
             return c.JSON(http.StatusInternalServerError, map[string]string{"error": "conver error"})
         }
-        var friends []friend
-
-        subQuery := db.Model(&models.FriendLink{}).
-            Select("user2_id").
-            Where("user1_id = ?", id)
-        var blockees []int
-        var blockers []int
-        db.Model(&models.BlockList{}).
-            Where("user1_id = ?", id).
-            Pluck("user2_id", &blockees)
-        db.Model(&models.BlockList{}).
-            Where("user2_id = ?", id).
-            Pluck("user1_id", &blockers)
-        blockedIDs := append(blockees, blockers...)
-        if err := db.Model(&models.FriendLink{}).
-            Select("User2.user_id AS id, User2.name AS name").
-            Joins("User2").
-            Where("friend_links.user1_id IN (?)", subQuery).
-            Where("friend_links.user2_id NOT IN (?)", subQuery).
-            Where("friend_links.user2_id NOT IN (?)", blockedIDs).
-            Offset((page - 1) * limit).
-            Limit(limit).
-            Scan(&friends).Error; err != nil {
+        friends, err := repository.Get_friend_of_friend_list_paging(db, id, page, limit)
+        if err != nil {
             return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
-            }
+        }
         return c.JSON(http.StatusOK, friends)
     })
 
