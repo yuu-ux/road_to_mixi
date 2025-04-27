@@ -11,6 +11,9 @@ func SeedUsers(db *gorm.DB) {
 		{UserID: 1, Name: "Alice"},
 		{UserID: 2, Name: "Bob"},
 		{UserID: 3, Name: "Charlie"},
+		{UserID: 4, Name: "David"},
+		{UserID: 5, Name: "Eve"},
+		{UserID: 6, Name: "Frank"},
 	}
 
     if err := db.Create(&user).Error; err != nil {
