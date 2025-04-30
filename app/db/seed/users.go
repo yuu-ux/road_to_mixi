@@ -1,9 +1,9 @@
 package seed
 
 import (
-	"log"
 	"gorm.io/gorm"
-    "road_to_mixi/models"
+	"log"
+	"road_to_mixi/models"
 )
 
 func SeedUsers(db *gorm.DB) {
@@ -16,8 +16,8 @@ func SeedUsers(db *gorm.DB) {
 		{UserID: 6, Name: "Frank"},
 	}
 
-    if err := db.Create(&user).Error; err != nil {
-        log.Fatalf("Failed to seed: %v", err)
-    }
+	if err := db.Create(&user).Error; err != nil {
+		log.Fatalf("Failed to seed: %v", err)
+	}
 	log.Println("User seeding completed successfully.")
 }

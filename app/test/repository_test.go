@@ -1,29 +1,29 @@
 package test
 
 import (
-	"testing"
-	"road_to_mixi/repository"
-	"road_to_mixi/models"
+	"github.com/joho/godotenv"
 	"gorm.io/gorm"
+	"log"
 	database "road_to_mixi/db"
-    "github.com/joho/godotenv"
-    "log"
+	"road_to_mixi/models"
+	"road_to_mixi/repository"
+	"testing"
 )
 
 func setupTestDB() *gorm.DB {
-    err := godotenv.Load("../.env")
-    if err != nil {
-        log.Fatal("Error loading .env file")
-    }
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	db, err := database.New()
 	if err != nil {
 		panic("Failed to connect to MySQL: " + err.Error())
 	}
-    db.Exec("DROP TABLE IF EXISTS friend_links")
-    db.Exec("DROP TABLE IF EXISTS block_lists")
-    db.Exec("DROP TABLE IF EXISTS users")
+	db.Exec("DROP TABLE IF EXISTS friend_links")
+	db.Exec("DROP TABLE IF EXISTS block_lists")
+	db.Exec("DROP TABLE IF EXISTS users")
 	db.AutoMigrate(&models.User{}, &models.FriendLink{}, &models.BlockList{})
-    database.InitDatabase(db)
+	database.InitDatabase(db)
 	return db
 }
 
@@ -59,4 +59,3 @@ func TestGetFriendOfFriendListPaging(t *testing.T) {
 		t.Errorf("Expected 1 friend of friend in page, got %d", len(friends))
 	}
 }
-

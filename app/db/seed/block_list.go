@@ -1,9 +1,9 @@
 package seed
 
 import (
-	"log"
 	"gorm.io/gorm"
-    "road_to_mixi/models"
+	"log"
+	"road_to_mixi/models"
 )
 
 func SeedBlockLists(db *gorm.DB) {
@@ -11,8 +11,8 @@ func SeedBlockLists(db *gorm.DB) {
 		{User1ID: 2, User2ID: 1},
 	}
 
-    if err := db.Create(&blockList).Error; err != nil {
-        log.Fatalf("Failed to seed: %v", err)
-    }
+	if err := db.Create(&blockList).Error; err != nil {
+		log.Fatalf("Failed to seed: %v", err)
+	}
 	log.Println("User seeding completed successfully.")
 }

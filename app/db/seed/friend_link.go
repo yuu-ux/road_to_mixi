@@ -1,9 +1,9 @@
 package seed
 
 import (
-	"log"
 	"gorm.io/gorm"
-    "road_to_mixi/models"
+	"log"
+	"road_to_mixi/models"
 )
 
 func SeedFriendLinks(db *gorm.DB) {
@@ -18,8 +18,8 @@ func SeedFriendLinks(db *gorm.DB) {
 		{User1ID: 6, User2ID: 4},
 	}
 
-    if err := db.Create(&friendLink).Error; err != nil {
-        log.Fatalf("Failed to seed: %v", err)
-    }
+	if err := db.Create(&friendLink).Error; err != nil {
+		log.Fatalf("Failed to seed: %v", err)
+	}
 	log.Println("User seeding completed successfully.")
 }
