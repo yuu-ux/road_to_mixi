@@ -26,12 +26,14 @@ func main() {
     database.InitDatabase(db)
 
 	e.GET("/", func(c echo.Context) error {
+        log.Println(c.RealIP())
         var users []models.User
         db.Find(&users)
         return c.Render(http.StatusOK, "index.html", map[string]interface{}{"Title": "トップページ", "Users": users})
 	})
 
     e.GET("/get_friend_list", func(c echo.Context) error {
+        log.Println(c.RealIP())
         id := c.QueryParam("id")
         if id == "" {
             return c.JSON(http.StatusBadRequest, map[string]string{"error": "Not Found id"})
@@ -44,6 +46,7 @@ func main() {
     })
 
     e.GET("get_friend_of_friend_list", func(c echo.Context) error {
+        log.Println(c.RealIP())
         id := c.QueryParam("id")
         if id == "" {
             return c.JSON(http.StatusBadRequest, map[string]string{"error": "Not Found id"})
@@ -56,6 +59,7 @@ func main() {
     })
 
     e.GET("/get_friend_of_friend_list_paging", func(c echo.Context) error {
+        log.Println(c.RealIP())
         id := c.QueryParam("id")
         limitStr := c.QueryParam("limit")
         pageStr := c.QueryParam("page")
