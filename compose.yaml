@@ -5,6 +5,9 @@ services:
       dockerfile: ./web/Dockerfile
     ports:
       - 8090:8090
+    volumes:
+      - ./web/src:/web
+      - ./web/nginx:/etc/nginx
     depends_on:
       - app
     init: true
