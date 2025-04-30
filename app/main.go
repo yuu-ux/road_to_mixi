@@ -33,6 +33,9 @@ func main() {
 
     e.GET("/get_friend_list", func(c echo.Context) error {
         id := c.QueryParam("id")
+        if id == "" {
+            return c.JSON(http.StatusBadRequest, map[string]string{"error": "Not Found id"})
+        }
         friends, err := repository.Get_friend_list(db, id)
         if err != nil {
             return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
@@ -42,6 +45,9 @@ func main() {
 
     e.GET("get_friend_of_friend_list", func(c echo.Context) error {
         id := c.QueryParam("id")
+        if id == "" {
+            return c.JSON(http.StatusBadRequest, map[string]string{"error": "Not Found id"})
+        }
         friends, err := repository.Get_friend_of_friend_list(db, id)
         if err != nil {
             return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
@@ -53,6 +59,9 @@ func main() {
         id := c.QueryParam("id")
         limitStr := c.QueryParam("limit")
         pageStr := c.QueryParam("page")
+        if id == "" || limitStr == "" || pageStr == "" {
+            return c.JSON(http.StatusBadRequest, map[string]string{"error": "Not Found id or limit or page"})
+        }
         limit, err := strconv.Atoi(limitStr)
         if err != nil {
             return c.JSON(http.StatusInternalServerError, map[string]string{"error": "conver error"})
