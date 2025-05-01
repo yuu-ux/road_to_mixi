@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"road_to_mixi/db/seed"
+	"road_to_mixi/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -26,13 +27,26 @@ func New() (*gorm.DB, error) {
     return db, nil
 }
 
-func InitDatabase(db *gorm.DB) {
-    db.Exec("SET FOREIGN_KEY_CHECKS = 0")
-    db.Exec("TRUNCATE TABLE users")
-    db.Exec("TRUNCATE TABLE friend_links")
-    db.Exec("TRUNCATE TABLE block_lists")
-    db.Exec("SET FOREIGN_KEY_CHECKS = 1")
+func InitDatabase(db *gorm.DB) error {
+    if err := db.AutoMigrate(&models.User{}, &models.FriendLink{}, &models.BlockList{}); err != nil {
+        return fmt.Errorf("auto migrate failed: %w", err)
+    }
+    tables := []string{"users", "friend_links", "block_lists"}
+    if err := db.Exec("SET FOREIGN_KEY_CHECKS = 0").Error; err != nil {
+        return fmt.Errorf("failed to disable foreign key checks: %w", err)
+    }
+    for _, t := range tables {
+        if db.Migrator().HasTable(t) {
+            if err := db.Exec(fmt.Sprintf("TRUNCATE TABLE %s", t)).Error; err != nil {
+                return fmt.Errorf("failed to truncate table %s: %w", t, err)
+            }
+        }
+    }
+    if err := db.Exec("SET FOREIGN_KEY_CHECKS = 1").Error; err != nil {
+        return fmt.Errorf("failed to enable foreign key checks: %w", err)
+    }
     seed.SeedUsers(db)
     seed.SeedBlockLists(db)
     seed.SeedFriendLinks(db)
+	return nil
 }
