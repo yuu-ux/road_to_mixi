@@ -12,6 +12,9 @@ services:
     tty: true
     environment:
       TZ: Asia/Tokyo
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - mixi_network
   db:
@@ -27,6 +30,11 @@ services:
       - ./app/db/my.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - mixi_network
+    healthcheck:
+      test: "mysqladmin ping -h127.0.0.1 -uroot -ppassword "
+      timeout: 5s
+      interval: 5s
+      retries: 5
 
 networks:
   mixi_network:
