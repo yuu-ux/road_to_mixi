@@ -21,12 +21,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	database.InitDatabase(db)
+	// database.InitDatabase(db)
 
 	e := echo.New()
 	handlers.SetDefault(e)
 
-	const currentUserID = "1"
+	var currentUserID = "1"
 	const defaultLimit = 2
 
 	e.GET("/", func(c echo.Context) error {
@@ -122,5 +122,20 @@ func main() {
 			"Limit": limit,
 		})
 	})
+
+	e.GET("/login", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "login.html", map[string]interface{}{
+			"Title": "ログイン",
+		})
+	})
+
+	e.POST("/login", func(c echo.Context) error {
+		id := c.FormValue("id")
+		if id != "" {
+			currentUserID = id
+		}
+		return c.Redirect(http.StatusSeeOther, "/")
+	})
+
 	e.Logger.Fatal(e.Start(":1323"))
 }
