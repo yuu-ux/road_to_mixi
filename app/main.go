@@ -21,15 +21,33 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	database.InitDatabase(db)
+
 	e := echo.New()
 	handlers.SetDefault(e)
-	database.InitDatabase(db)
+
+	const currentUserID = "1"
 
 	e.GET("/", func(c echo.Context) error {
 		log.Println(c.RealIP())
-		var users []models.User
-		db.Find(&users)
-		return c.Render(http.StatusOK, "index.html", map[string]interface{}{"Title": "トップページ", "Users": users})
+		var user models.User
+		if err := db.First(&user, currentUserID).Error; err != nil {
+			return c.String(http.StatusInternalServerError, "ユーザー取得失敗")
+		}
+		followers, err := repository.Get_friend_list(db, currentUserID)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "フォロワー取得失敗"})
+		}
+		recs, err := repository.Get_friend_of_friend_list(db, currentUserID)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "おすすめ取得失敗"})
+		}
+		return c.Render(http.StatusOK, "index.html", map[string]interface{}{
+			"Title":           "ユーザーページ",
+			"User":            user,
+			"Followers":       followers,
+			"Recommendations": recs,
+		})
 	})
 
 	e.GET("/get_friend_list", func(c echo.Context) error {
@@ -42,7 +60,10 @@ func main() {
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
 		}
-		return c.JSON(http.StatusOK, friends)
+		return c.Render(http.StatusOK, "friend_list.html", map[string]interface{}{
+			"Title":   "フレンドリスト",
+			"Friends": friends,
+		})
 	})
 
 	e.GET("get_friend_of_friend_list", func(c echo.Context) error {
