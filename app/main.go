@@ -21,12 +21,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// database.InitDatabase(db)
+	database.InitDatabase(db)
 
 	e := echo.New()
 	handlers.SetDefault(e)
 
 	const currentUserID = "1"
+	const defaultLimit = 2
 
 	e.GET("/", func(c echo.Context) error {
 		log.Println(c.RealIP())
@@ -80,6 +81,11 @@ func main() {
 			"Title":   "おすすめの友達",
 			"ID":      id,
 			"Friends": friends,
+			"HasPrev": false,
+			"HasNext": true,
+			"PrevPage": 0,
+			"NextPage": 2,
+			"Limit": defaultLimit,
 		})
 	})
 
@@ -103,7 +109,18 @@ func main() {
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
 		}
-		return c.JSON(http.StatusOK, friends)
+		HasPrev := page > 1
+		HasNext := len(friends) == limit
+		return c.Render(http.StatusOK, "recommend_friend.html", map[string]interface{}{
+			"Title":   "おすすめの友達",
+			"ID": id,
+			"Friends": friends,
+			"HasPrev": HasPrev,
+			"HasNext": HasNext,
+			"PrevPage": page - 1,
+			"NextPage": page + 1,
+			"Limit": limit,
+		})
 	})
 	e.Logger.Fatal(e.Start(":1323"))
 }
