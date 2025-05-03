@@ -36,6 +36,8 @@ func Get_friend_of_friend_list(db *gorm.DB, id string) ([]models.Friend, error) 
 		Joins("User2").
 		Where("friend_links.user1_id IN (?)", subQuery).
 		Where("friend_links.user2_id NOT IN (?)", subQuery).
+		Where("friend_links.user2_id NOT IN (?)", subQuery).
+		Where("friend_links.user2_id != ?", id).
 		Where("friend_links.user2_id NOT IN (?)", blockedIDs).
 		Scan(&friends).Error; err != nil {
 		return nil, err
@@ -47,29 +49,22 @@ func Get_friend_of_friend_list_paging(db *gorm.DB, id string, page int, limit in
 	var blockees []int
 	var blockers []int
 	var friends []models.Friend
-
-	// フレンドのリストを取得
 	subQuery := db.Model(&models.FriendLink{}).
 		Select("user2_id").
 		Where("user1_id = ?", id)
-
-	// ユーザー1のブロックリストを取得
 	db.Model(&models.BlockList{}).
 		Where("user1_id = ?", id).
 		Pluck("user2_id", &blockees)
-
-	// ユーザー2のブロックリストを取得
 	db.Model(&models.BlockList{}).
 		Where("user2_id = ?", id).
 		Pluck("user1_id", &blockers)
-
-	// ブロック関係のリストを作成
 	blockedIDs := append(blockees, blockers...)
 
 	if err := db.Model(&models.FriendLink{}).
 		Select("User2.user_id AS id, User2.name AS name").
 		Joins("User2").
 		Where("friend_links.user1_id IN (?)", subQuery).
+		Where("friend_links.user2_id != ?", id).
 		Where("friend_links.user2_id NOT IN (?)", subQuery).
 		Where("friend_links.user2_id NOT IN (?)", blockedIDs).
 		Offset((page - 1) * limit).
