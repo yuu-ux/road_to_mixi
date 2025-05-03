@@ -23,6 +23,34 @@
             {{ end }}
         </ul>
     </div>
+    <!-- ページネーション -->
+    <div class="px-6 py-4 flex justify-between">
+		{{ range .Index }}
+        {{ if .HasPrev }}
+		<a href="/get_friend_of_friend_list_paging?id={{ .ID }}&page={{ .PrevPage }}&limit={{ .Limit }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">前へ</a>
+        {{ else }}
+        <span class="px-3 py-1 text-gray-400">前へ</span>
+        {{ end }}
+
+        <!-- ページ番号ボタン -->
+        <div class="flex space-x-2">
+            {{ $currentPage := .CurrentPage }}
+            {{ range $i := .PageNumbers }}
+                {{ if eq $i $currentPage }}
+                <span class="px-3 py-1 bg-blue-500 text-white rounded">{{ $i }}</span>
+                {{ else }}
+                <a href="/get_friend_of_friend_list_paging?id={{ .ID }}&page={{ $i }}&limit={{ .Limit }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">{{ $i }}</a>
+                {{ end }}
+            {{ end }}
+        </div>
+
+        {{ if .HasNext }}
+        <a href="/get_friend_of_friend_list_paging?id={{ .ID }}&page={{ .NextPage }}&limit={{ .Limit }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">次へ</a>
+        {{ else }}
+        <span class="px-3 py-1 text-gray-400">次へ</span>
+        {{ end }}
+        {{ end }}
+    </div>
 </div>
 </body>
 </html>

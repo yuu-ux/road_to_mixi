@@ -21,7 +21,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	database.InitDatabase(db)
+	// database.InitDatabase(db)
 
 	e := echo.New()
 	handlers.SetDefault(e)
@@ -76,7 +76,11 @@ func main() {
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
 		}
-		return c.JSON(http.StatusOK, friends)
+		return c.Render(http.StatusOK, "recommend_friend.html", map[string]interface{}{
+			"Title":   "おすすめの友達",
+			"ID":      id,
+			"Friends": friends,
+		})
 	})
 
 	e.GET("/get_friend_of_friend_list_paging", func(c echo.Context) error {
@@ -101,6 +105,5 @@ func main() {
 		}
 		return c.JSON(http.StatusOK, friends)
 	})
-
 	e.Logger.Fatal(e.Start(":1323"))
 }
