@@ -9,10 +9,10 @@ import (
 
 func (h *Handler) Index(c echo.Context) error {
 	log.Println(c.RealIP())
-    user, err := repository.GetUserByID(h.DB, currentUserID.ID)
-    if err != nil {
-        return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to get user"})
-    }
+	user, err := repository.GetUserByID(h.DB, currentUserID.ID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to get user"})
+	}
 
 	followers, err := repository.Get_friend_list(h.DB, currentUserID.ID)
 	if err != nil {

@@ -6,8 +6,8 @@ import (
 )
 
 func GetUserByID(db *gorm.DB, id int) (models.User, error) {
-    var user models.User
-    return user, db.First(&user, id).Error
+	var user models.User
+	return user, db.First(&user, id).Error
 }
 
 func Get_friend_list(db *gorm.DB, id int) ([]models.Friend, error) {
@@ -35,7 +35,7 @@ func GetFriendOfFriendList(db *gorm.DB, id int) ([]models.Friend, error) {
 	blockedIDs := append(blockees, blockers...)
 
 	var friends []models.Friend
-    return friends, db.Model(&models.FriendLink{}).
+	return friends, db.Model(&models.FriendLink{}).
 		Distinct("User2.user_id").
 		Select("User2.user_id AS id, User2.name AS name").
 		Joins("User2").
