@@ -4,6 +4,7 @@ import (
 	"log"
 	database "road_to_mixi/db"
 	"road_to_mixi/handlers"
+    "road_to_mixi/util"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
@@ -22,7 +23,7 @@ func main() {
 	// database.InitDatabase(db)
 
 	e := echo.New()
-	handlers.SetDefault(e)
+	util.SetDefault(e)
 	validate := validator.New()
 	h := &handlers.Handler{DB: db, Validate: validate}
 	e.GET("/", h.Index)
