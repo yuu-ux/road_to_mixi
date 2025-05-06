@@ -18,7 +18,7 @@ func (h *Handler) GetFriendOfFriendListPaging(c echo.Context) error {
 	if err := h.Validate.Struct(query); err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid Parameter"})
 	}
-	friends, err := repository.Get_friend_of_friend_list_paging(h.DB, query.ID, query.Page, query.Limit)
+	friends, err := repository.GetFriendOfFriendListPaging(h.DB, query.ID, query.Page, query.Limit)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
 	}

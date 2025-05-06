@@ -19,7 +19,7 @@ func Get_friend_list(db *gorm.DB, id int) ([]models.Friend, error) {
 		Scan(&friends).Error
 }
 
-func Get_friend_of_friend_list(db *gorm.DB, id int) ([]models.Friend, error) {
+func GetFriendOfFriendList(db *gorm.DB, id int) ([]models.Friend, error) {
 	var friends []models.Friend
 	subQuery := db.Model(&models.FriendLink{}).
 		Select("user2_id").
@@ -48,7 +48,7 @@ func Get_friend_of_friend_list(db *gorm.DB, id int) ([]models.Friend, error) {
 	return friends, nil
 }
 
-func Get_friend_of_friend_list_paging(db *gorm.DB, id int, page int, limit int) ([]models.Friend, error) {
+func GetFriendOfFriendListPaging(db *gorm.DB, id int, page int, limit int) ([]models.Friend, error) {
 	var blockees []int
 	var blockers []int
 	var friends []models.Friend

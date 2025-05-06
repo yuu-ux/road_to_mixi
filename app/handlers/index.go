@@ -19,7 +19,7 @@ func (h *Handler) Index(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to get followers"})
 	}
 
-	recs, err := repository.Get_friend_of_friend_list(h.DB, currentUserID.ID)
+	recs, err := repository.GetFriendOfFriendList(h.DB, currentUserID.ID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to get recommendations"})
 	}
