@@ -5,16 +5,18 @@ import (
 	"road_to_mixi/models"
 )
 
+func GetUserByID(db *gorm.DB, id int) (models.User, error) {
+    var user models.User
+    return user, db.First(&user, id).Error
+}
+
 func Get_friend_list(db *gorm.DB, id int) ([]models.Friend, error) {
 	var friends []models.Friend
-	if err := db.Model(&models.FriendLink{}).
+	return friends, db.Model(&models.FriendLink{}).
 		Select("User2.user_id AS id, User2.name").
 		Joins("User2").
 		Where("friend_links.user1_id = ?", id).
-		Scan(&friends).Error; err != nil {
-		return nil, err
-	}
-	return friends, nil
+		Scan(&friends).Error
 }
 
 func Get_friend_of_friend_list(db *gorm.DB, id int) ([]models.Friend, error) {
