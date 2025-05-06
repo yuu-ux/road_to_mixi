@@ -3,10 +3,9 @@ package main
 import (
 	"log"
 	database "road_to_mixi/db"
-	"road_to_mixi/handlers"
-    "road_to_mixi/util"
+	"road_to_mixi/router"
+	"road_to_mixi/util"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
@@ -20,18 +19,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// database.InitDatabase(db)
-
+	database.InitDatabase(db)
 	e := echo.New()
 	util.SetDefault(e)
-	validate := validator.New()
-	h := &handlers.Handler{DB: db, Validate: validate}
-	e.GET("/", h.Index)
-	e.GET("/login", h.GetLogin)
-	e.POST("/login", h.PostLogin)
-	e.GET("/get_friend_list", h.GetFriendList)
-	e.GET("get_friend_of_friend_list", h.GetFriendOfFriendList)
-	e.GET("/get_friend_of_friend_list_paging", h.GetFriendOfFriendListPaging)
-
+	router.Router(db, e)
 	e.Logger.Fatal(e.Start(":1323"))
 }
