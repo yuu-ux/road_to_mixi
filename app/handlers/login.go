@@ -20,6 +20,6 @@ func (h *Handler) PostLogin(c echo.Context) error {
 	if err := h.Validate.Struct(query); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
 	}
-	currentUserID = query
+	currentUserID = query.ID
 	return c.Redirect(http.StatusSeeOther, "/")
 }
