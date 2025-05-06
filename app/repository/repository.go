@@ -5,7 +5,7 @@ import (
 	"road_to_mixi/models"
 )
 
-func Get_friend_list(db *gorm.DB, id string) ([]models.Friend, error) {
+func Get_friend_list(db *gorm.DB, id int) ([]models.Friend, error) {
 	var friends []models.Friend
 	if err := db.Model(&models.FriendLink{}).
 		Select("User2.user_id AS id, User2.name").
@@ -17,7 +17,7 @@ func Get_friend_list(db *gorm.DB, id string) ([]models.Friend, error) {
 	return friends, nil
 }
 
-func Get_friend_of_friend_list(db *gorm.DB, id string) ([]models.Friend, error) {
+func Get_friend_of_friend_list(db *gorm.DB, id int) ([]models.Friend, error) {
 	var friends []models.Friend
 	subQuery := db.Model(&models.FriendLink{}).
 		Select("user2_id").
@@ -32,7 +32,7 @@ func Get_friend_of_friend_list(db *gorm.DB, id string) ([]models.Friend, error) 
 		Pluck("user1_id", &blockers)
 	blockedIDs := append(blockees, blockers...)
 	if err := db.Model(&models.FriendLink{}).
-        Distinct("User2.user_id").
+		Distinct("User2.user_id").
 		Select("User2.user_id AS id, User2.name AS name").
 		Joins("User2").
 		Where("friend_links.user1_id IN (?)", subQuery).
@@ -46,7 +46,7 @@ func Get_friend_of_friend_list(db *gorm.DB, id string) ([]models.Friend, error) 
 	return friends, nil
 }
 
-func Get_friend_of_friend_list_paging(db *gorm.DB, id string, page int, limit int) ([]models.Friend, error) {
+func Get_friend_of_friend_list_paging(db *gorm.DB, id int, page int, limit int) ([]models.Friend, error) {
 	var blockees []int
 	var blockers []int
 	var friends []models.Friend
@@ -62,7 +62,7 @@ func Get_friend_of_friend_list_paging(db *gorm.DB, id string, page int, limit in
 	blockedIDs := append(blockees, blockers...)
 
 	if err := db.Model(&models.FriendLink{}).
-        Distinct("User2.user_id").
+		Distinct("User2.user_id").
 		Select("User2.user_id AS id, User2.name AS name").
 		Joins("User2").
 		Where("friend_links.user1_id IN (?)", subQuery).
