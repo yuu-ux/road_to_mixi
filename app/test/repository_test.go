@@ -33,8 +33,18 @@ func TestGetFriendList(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error fetching friend list: %v", err)
 	}
-	if len(friends) != 2 {
-		t.Errorf("Expected 2 friend, got %d", len(friends))
+	// 正常ケース
+	if len(friends) != 4 {
+		t.Errorf("Expected 4 friend, got %d", len(friends))
+	}
+
+	// 異常ケース
+	friends, err = repository.GetFriendList(db, 999)
+	if err != nil {
+		t.Fatalf("Error fetching friend list: %v", err)
+	}
+	if len(friends) != 0 {
+		t.Errorf("Expected 0 friend, got %d", len(friends))
 	}
 }
 
@@ -44,8 +54,18 @@ func TestGetFriendOfFriendList(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error fetching friend of friend list: %v", err)
 	}
+	// 正常ケース
 	if len(friends) != 2 {
 		t.Errorf("Expected 2 friend of friend, got %d", len(friends))
+	}
+
+	friends, err = repository.GetFriendOfFriendList(db, 999)
+	if err != nil {
+		t.Fatalf("Error fetching friend of friend list: %v", err)
+	}
+	// 異常ケース
+	if len(friends) != 0 {
+		t.Errorf("Expected 0 friend of friend, got %d", len(friends))
 	}
 }
 
@@ -55,7 +75,17 @@ func TestGetFriendOfFriendListPaging(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error fetching paginated friend of friend list: %v", err)
 	}
+	// 正常ケース
 	if len(friends) != 1 {
 		t.Errorf("Expected 1 friend of friend in page, got %d", len(friends))
+	}
+
+	friends, err = repository.GetFriendOfFriendList(db, 999)
+	if err != nil {
+		t.Fatalf("Error fetching friend of friend list: %v", err)
+	}
+	// 異常ケース
+	if len(friends) != 0 {
+		t.Errorf("Expected 0 friend of friend, got %d", len(friends))
 	}
 }
