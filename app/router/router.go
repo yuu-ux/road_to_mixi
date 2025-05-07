@@ -14,6 +14,6 @@ func Router(db *gorm.DB, e *echo.Echo) {
 	e.GET("/login", h.GetLogin)
 	e.POST("/login", h.PostLogin)
 	e.GET("/get_friend_list", h.GetFriendList)
-	e.GET("get_friend_of_friend_list", h.GetFriendOfFriendList)
+	e.GET("/get_friend_of_friend_list", h.GetFriendOfFriendList)
 	e.GET("/get_friend_of_friend_list_paging", h.GetFriendOfFriendListPaging)
 }
