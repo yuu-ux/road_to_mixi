@@ -6,6 +6,8 @@ import (
 )
 
 func NewValidator() *validator.Validate {
+    const minID = 1
+
 	validate := validator.New()
 	validate.RegisterValidation("min_id", func(fl validator.FieldLevel) bool {
 		idStr := fl.Field().String()
@@ -13,7 +15,7 @@ func NewValidator() *validator.Validate {
 		if err != nil {
 			return false
 		}
-		return id >= 1
+		return id >= minID
 	})
 	return validate
 }

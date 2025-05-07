@@ -7,6 +7,7 @@ import (
 
 var currentUserID = 1
 
+const minPage = 1
 const defaultLimit = 1
 
 type Handler struct {

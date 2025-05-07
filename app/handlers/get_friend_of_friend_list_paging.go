@@ -11,6 +11,7 @@ import (
 
 func (h *Handler) GetFriendOfFriendListPaging(c echo.Context) error {
 	log.Println(c.RealIP())
+
 	var query models.UserPagingQuery
 	if err := c.Bind(&query); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Invalid request"})
@@ -34,7 +35,7 @@ func (h *Handler) GetFriendOfFriendListPaging(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
 	}
-	HasPrev := page > 1
+	HasPrev := page > minPage
 	HasNext := len(friends) == limit
 	return c.Render(http.StatusOK, "recommend_friend.html", map[string]interface{}{
 		"Title":    "おすすめの友達",

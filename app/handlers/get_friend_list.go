@@ -11,6 +11,7 @@ import (
 
 func (h *Handler) GetFriendList(c echo.Context) error {
 	log.Println(c.RealIP())
+
 	var query models.UserIDQuery
 	if err := c.Bind(&query); err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})

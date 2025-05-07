@@ -11,6 +11,8 @@ import (
 
 func (h *Handler) GetFriendOfFriendList(c echo.Context) error {
 	log.Println(c.RealIP())
+	const nextPage = 2
+
 	var query models.UserIDQuery
 	if err := c.Bind(&query); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
@@ -32,8 +34,8 @@ func (h *Handler) GetFriendOfFriendList(c echo.Context) error {
 		"Friends":  friends,
 		"HasPrev":  false,
 		"HasNext":  true,
-		"PrevPage": 0,
-		"NextPage": 2,
+		"PrevPage": minPage,
+		"NextPage": nextPage,
 		"Limit":    defaultLimit,
 	})
 }
