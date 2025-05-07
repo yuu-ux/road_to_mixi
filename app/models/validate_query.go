@@ -1,11 +1,11 @@
 package models
 
 type UserIDQuery struct {
-	ID int `query:"id" form:"id" validate:"required,min=1"`
+	ID string `query:"id" form:"id" validate:"required,numeric,min_id"`
 }
 
 type UserPagingQuery struct {
-	ID    int `query:"id" validate:"required,min=1"`
-	Page  int `query:"page" validate:"required,min=1"`
-	Limit int `query:"limit" validate:"required,min=1,max=100"`
+	ID    string `query:"id" validate:"required,numeric,min_id"`
+	Page  string `query:"page" validate:"required,numeric,min_id"`
+	Limit string `query:"limit" validate:"required,numeric,min_id"`
 }

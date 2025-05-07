@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"road_to_mixi/models"
+	"strconv"
 )
 
 func (h *Handler) GetLogin(c echo.Context) error {
@@ -20,6 +21,10 @@ func (h *Handler) PostLogin(c echo.Context) error {
 	if err := h.Validate.Struct(query); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
 	}
-	currentUserID = query.ID
+	id, err := strconv.Atoi(query.ID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "ID must be integer"})
+	}
+	currentUserID = id
 	return c.Redirect(http.StatusSeeOther, "/")
 }

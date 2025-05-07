@@ -1,14 +1,14 @@
 package router
 
 import (
-	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 	"road_to_mixi/handlers"
+	"road_to_mixi/util"
 )
 
 func Router(db *gorm.DB, e *echo.Echo) {
-	validate := validator.New()
+	validate := util.NewValidator()
 	h := &handlers.Handler{DB: db, Validate: validate}
 	e.GET("/", h.Index)
 	e.GET("/login", h.GetLogin)

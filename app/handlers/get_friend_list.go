@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"road_to_mixi/models"
 	"road_to_mixi/repository"
+	"strconv"
 )
 
 func (h *Handler) GetFriendList(c echo.Context) error {
@@ -17,7 +18,11 @@ func (h *Handler) GetFriendList(c echo.Context) error {
 	if err := h.Validate.Struct(query); err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid Parameter"})
 	}
-	friends, err := repository.Get_friend_list(h.DB, query.ID)
+	id, err := strconv.Atoi(query.ID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "ID must be integer"})
+	}
+	friends, err := repository.Get_friend_list(h.DB, id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
 	}
