@@ -22,7 +22,7 @@ func (h *Handler) GetFriendList(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "ID must be integer"})
 	}
-	friends, err := repository.Get_friend_list(h.DB, id)
+	friends, err := repository.GetFriendList(h.DB, id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed"})
 	}

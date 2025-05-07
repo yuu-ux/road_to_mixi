@@ -29,7 +29,7 @@ func setupTestDB() *gorm.DB {
 
 func TestGetFriendList(t *testing.T) {
 	db := setupTestDB()
-	friends, err := repository.Get_friend_list(db, 1)
+	friends, err := repository.GetFriendList(db, 1)
 	if err != nil {
 		t.Fatalf("Error fetching friend list: %v", err)
 	}
