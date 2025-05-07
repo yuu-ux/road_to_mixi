@@ -29,7 +29,7 @@ func setupTestDB() *gorm.DB {
 
 func TestGetFriendList(t *testing.T) {
 	db := setupTestDB()
-	friends, err := repository.Get_friend_list(db, "1")
+	friends, err := repository.Get_friend_list(db, 1)
 	if err != nil {
 		t.Fatalf("Error fetching friend list: %v", err)
 	}
@@ -40,7 +40,7 @@ func TestGetFriendList(t *testing.T) {
 
 func TestGetFriendOfFriendList(t *testing.T) {
 	db := setupTestDB()
-	friends, err := repository.GetFriendOfFriendList(db, "1")
+	friends, err := repository.GetFriendOfFriendList(db, 1)
 	if err != nil {
 		t.Fatalf("Error fetching friend of friend list: %v", err)
 	}
@@ -51,7 +51,7 @@ func TestGetFriendOfFriendList(t *testing.T) {
 
 func TestGetFriendOfFriendListPaging(t *testing.T) {
 	db := setupTestDB()
-	friends, err := repository.GetFriendOfFriendListPaging(db, "1", 2, 1)
+	friends, err := repository.GetFriendOfFriendListPaging(db, 1, 2, 1)
 	if err != nil {
 		t.Fatalf("Error fetching paginated friend of friend list: %v", err)
 	}
