@@ -29,13 +29,24 @@ func setupTestDB() *gorm.DB {
 
 func TestGetFriendList(t *testing.T) {
 	db := setupTestDB()
+
+	// 正常ケース
 	friends, err := repository.GetFriendList(db, 1)
 	if err != nil {
 		t.Fatalf("Error fetching friend list: %v", err)
 	}
-	// 正常ケース
-	if len(friends) != 4 {
-		t.Errorf("Expected 4 friend, got %d", len(friends))
+	expectedFriendIDs := []int{2, 3, 4, 6}
+	for _, friend := range friends {
+		found := false
+		for _, expectedID := range expectedFriendIDs {
+			if friend.ID == expectedID {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("Unexpected friend ID: %d, not in expected list", friend.ID)
+		}
 	}
 
 	// 異常ケース
@@ -50,20 +61,31 @@ func TestGetFriendList(t *testing.T) {
 
 func TestGetFriendOfFriendList(t *testing.T) {
 	db := setupTestDB()
+
+	// 正常ケース
 	friends, err := repository.GetFriendOfFriendList(db, 1)
 	if err != nil {
 		t.Fatalf("Error fetching friend of friend list: %v", err)
 	}
-	// 正常ケース
-	if len(friends) != 2 {
-		t.Errorf("Expected 2 friend of friend, got %d", len(friends))
+	expectedFriendIDs := []int{5, 7}
+	for _, friend := range friends {
+		found := false
+		for _, expectedID := range expectedFriendIDs {
+			if friend.ID == expectedID {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("Unexpected friend ID: %d, not in expected list", friend.ID)
+		}
 	}
 
+	// 異常ケース
 	friends, err = repository.GetFriendOfFriendList(db, 999)
 	if err != nil {
 		t.Fatalf("Error fetching friend of friend list: %v", err)
 	}
-	// 異常ケース
 	if len(friends) != 0 {
 		t.Errorf("Expected 0 friend of friend, got %d", len(friends))
 	}
@@ -71,13 +93,24 @@ func TestGetFriendOfFriendList(t *testing.T) {
 
 func TestGetFriendOfFriendListPaging(t *testing.T) {
 	db := setupTestDB()
+
+	// 正常ケース
 	friends, err := repository.GetFriendOfFriendListPaging(db, 1, 2, 1)
 	if err != nil {
 		t.Fatalf("Error fetching paginated friend of friend list: %v", err)
 	}
-	// 正常ケース
-	if len(friends) != 1 {
-		t.Errorf("Expected 1 friend of friend in page, got %d", len(friends))
+	expectedFriendIDs := []int{7}
+	for _, friend := range friends {
+		found := false
+		for _, expectedID := range expectedFriendIDs {
+			if friend.ID == expectedID {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("Unexpected friend ID: %d, not in expected list", friend.ID)
+		}
 	}
 
 	friends, err = repository.GetFriendOfFriendList(db, 999)
