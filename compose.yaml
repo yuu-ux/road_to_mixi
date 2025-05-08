@@ -49,7 +49,7 @@ services:
     healthcheck:
       test: "mysqladmin ping -h127.0.0.1 -uroot -ppassword"
       timeout: 10s
-      interval: 60s
+      interval: 30s
       retries: 10
       start_period: 30s
 
