@@ -15,6 +15,7 @@ func SeedFriendLinks(db *gorm.DB) {
 		{User1ID: 2, User2ID: 3},
 		{User1ID: 2, User2ID: 5},
 		{User1ID: 2, User2ID: 4},
+		{User1ID: 2, User2ID: 8},
 		{User1ID: 3, User2ID: 4},
 		{User1ID: 3, User2ID: 1},
 		{User1ID: 3, User2ID: 6},
