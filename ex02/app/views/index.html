@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ .Title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<a href='/login' class="float-right bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-lg m-4 mr-8">ログイン</a>
+<div class="max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden mt-10">
+    <div class="flex items-center px-6 py-4">
+        <div class="ml-4">
+            <h2 class="text-xl font-semibold">{{ .User.Name }}</h2>
+            <a href="/get_friend_list?id={{ .User.ID }}" class="text-gray-600">フォロワー: {{ len .Followers }}</a>
+        </div>
+    </div>
+
+    <div class="px-6 py-4 text-center">
+        <a href="/get_friend_of_friend_list?id={{ .User.ID }}"
+           class="inline-block bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+            おすすめの友達を表示
+        </a>
+    </div>
+</div>
+</body>
+</html>
