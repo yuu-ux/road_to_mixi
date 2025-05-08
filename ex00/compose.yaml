@@ -1,0 +1,18 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./web/Dockerfile
+    ports:
+      - 8090:8090
+    volumes:
+      - ./web/src:/web
+      - ./web/nginx:/etc/nginx
+    init: true
+    environment:
+      TZ: Asia/Tokyo
+    networks:
+      - mixi_network
+
+networks:
+  mixi_network:
