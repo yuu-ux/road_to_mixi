@@ -67,7 +67,7 @@ func TestGetFriendOfFriendList(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error fetching friend of friend list: %v", err)
 	}
-	expectedFriendIDs := []int{5, 7}
+	expectedFriendIDs := []int{7}
 	for _, friend := range friends {
 		found := false
 		for _, expectedID := range expectedFriendIDs {
