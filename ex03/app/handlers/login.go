@@ -26,5 +26,5 @@ func (h *Handler) PostLogin(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "ID must be integer"})
 	}
 	currentUserID = id
-	return c.Redirect(http.StatusSeeOther, "/")
+	return c.Redirect(http.StatusSeeOther, "/app/")
 }

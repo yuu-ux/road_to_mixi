@@ -11,7 +11,8 @@ func (h *Handler) Index(c echo.Context) error {
 	log.Println(c.RealIP())
 	user, err := repository.GetUserByID(h.DB, currentUserID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to get user"})
+		currentUserID = 1
+		return c.Redirect(http.StatusSeeOther, "/app/")
 	}
 
 	followers, err := repository.GetFriendList(h.DB, currentUserID)
