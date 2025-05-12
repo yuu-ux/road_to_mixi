@@ -7,11 +7,11 @@ import (
 
 func main() {
 	testCases := map[string]int{
-		"http://localhost:8090": 200,
-		"http://localhost:8090/hoge": 404,
+		"http://localhost:8090":                200,
+		"http://localhost:8090/hoge":           404,
 		"http://localhost:8090/img/image1.png": 200,
 		"http://localhost:8090/img/image2.png": 200,
-		"http://localhost:8090/test": 200,
+		"http://localhost:8090/test":           200,
 	}
 
 	for url, expected := range testCases {
